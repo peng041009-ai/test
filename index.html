@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>裴郅野 · 私信</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 12px;
+    }
+
+    /* 手机框架 */
+    .phone {
+      width: 390px;
+      max-width: 100%;
+      height: 844px;
+      max-height: 95vh;
+      background: #000000;
+      border-radius: 44px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 0 8px #1a1a1a, 0 20px 40px rgba(0,0,0,0.8);
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    /* 全屏支持 */
+    @media (max-width: 420px) {
+      body {
+        padding: 0;
+        align-items: flex-start;
+        min-height: 100vh;
+      }
+      .phone {
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* 状态栏 */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px 8px 24px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      background: #000000;
+      flex-shrink: 0;
+      letter-spacing: 0.3px;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .battery-icon {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .battery-level {
+      width: 22px;
+      height: 10px;
+      border: 1px solid #ffffff;
+      border-radius: 3px;
+      position: relative;
+      padding: 1px;
+    }
+
+    .battery-level::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: 2px;
+      width: 2px;
+      height: 4px;
+      background: #ffffff;
+      border-radius: 0 1px 1px 0;
+    }
+
+    .battery-fill {
+      width: 80%;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 1px;
+    }
+
+    /* 导航栏 */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: #000000;
+      flex-shrink: 0;
+      min-height: 52px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px 8px 4px 0;
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #000000;
+      border: 1px solid #2c2c2c;
+      flex-shrink: 0;
+    }
+
+    .nav-user-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .nav-username {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-ip {
+      color: #8e8e93;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .nav-icon {
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      line-height: 1;
+    }
+
+    /* 聊天区 */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px 8px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #000000;
+      scroll-behavior: smooth;
+    }
+
+    .chat-area::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    /* 顶部关注卡片 */
+    .follow-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0 20px 0;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .follow-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #000000;
+      border: 2px solid #2c2c2c;
+      margin-bottom: 6px;
+    }
+
+    .follow-name {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .follow-ip {
+      color: #8e8e93;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .view-profile-btn {
+      background: transparent;
+      border: 1.5px solid #fe2c55;
+      color: #fe2c55;
+      padding: 8px 28px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .view-profile-btn:active {
+      background: rgba(254, 44, 85, 0.1);
+    }
+
+    /* 时间标签 */
+    .time-tag {
+      text-align: center;
+      color: #8e8e93;
+      font-size: 11px;
+      margin: 4px 0;
+      flex-shrink: 0;
+    }
+
+    /* 系统提示 */
+    .system-hint {
+      text-align: center;
+      color: #8e8e93;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 12px;
+      border-radius: 10px;
+      margin: 4px auto;
+      max-width: 90%;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    /* 消息行 */
+    .msg-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      max-width: 82%;
+      flex-shrink: 0;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .msg-row.left {
+      align-self: flex-start;
+    }
+
+    .msg-row.right {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #000000;
+      border: 1px solid #2c2c2c;
+      flex-shrink: 0;
+      margin-bottom: 2px;
+    }
+
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 15px;
+      line-height: 1.4;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
+    .msg-bubble.left-bubble {
+      background: #2c2c2c;
+      color: #ffffff;
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-bubble.right-bubble {
+      background: #fe2c55;
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* 输入栏 */
+    .input-bar {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px 10px 12px;
+      background: #000000;
+      border-top: 1px solid #1c1c1c;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .emoji-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .input-field {
+      flex: 1;
+      background: #1c1c1c;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 16px;
+      color: #ffffff;
+      font-size: 15px;
+      outline: none;
+      min-width: 0;
+      font-family: inherit;
+    }
+
+    .input-field::placeholder {
+      color: #8e8e93;
+    }
+
+    .plus-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 26px;
+      cursor: pointer;
+      padding: 0 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .send-btn {
+      background: #fe2c55;
+      border: none;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .send-btn:active {
+      opacity: 0.8;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* Home指示条 */
+    .home-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px 0 8px 0;
+      background: #000000;
+      flex-shrink: 0;
+    }
+
+    .home-bar {
+      width: 134px;
+      height: 5px;
+      background: #ffffff;
+      border-radius: 3px;
+      opacity: 0.3;
+    }
+
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: light) {
+      /* 保持黑色背景，因为界面本来就是黑色风格 */
+    }
+
+    /* 隐藏滚动条但保留滚动 */
+    .chat-area {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <div class="status-left">
+        <span>23:59</span>
+      </div>
+      <div class="status-right">
+        <!-- 信号 -->
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+          <rect x="0" y="8" width="3" height="4" rx="0.5" fill="white"/>
+          <rect x="5" y="5" width="3" height="7" rx="0.5" fill="white"/>
+          <rect x="10" y="2" width="3" height="10" rx="0.5" fill="white"/>
+          <rect x="15" y="0" width="3" height="12" rx="0.5" fill="white" opacity="0.4"/>
+        </svg>
+        <!-- WiFi -->
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <path d="M8 11C8.55228 11 9 10.5523 9 10C9 9.44772 8.55228 9 8 9C7.44772 9 7 9.44772 7 10C7 10.5523 7.44772 11 8 11Z" fill="white"/>
+          <path d="M4.5 7.5C5.5 6.5 6.7 6 8 6C9.3 6 10.5 6.5 11.5 7.5" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <path d="M2 5C3.6 3.4 5.7 2.5 8 2.5C10.3 2.5 12.4 3.4 14 5" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <!-- 电池 -->
+        <div class="battery-icon">
+          <div class="battery-level">
+            <div class="battery-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <div class="nav-left">
+        <button class="back-btn" aria-label="返回">←</button>
+        <div class="nav-avatar"></div>
+        <div class="nav-user-info">
+          <span class="nav-username">裴郅野</span>
+          <span class="nav-ip">IP属地：中国香港</span>
+        </div>
+      </div>
+      <div class="nav-right">
+        <button class="nav-icon" aria-label="语音通话">📞</button>
+        <button class="nav-icon" aria-label="更多">⋯</button>
+      </div>
+    </div>
+
+    <!-- 聊天区 -->
+    <div class="chat-area" id="chatArea">
+      <!-- 顶部关注卡片 -->
+      <div class="follow-card">
+        <div class="follow-avatar"></div>
+        <div class="follow-name">裴郅野</div>
+        <div class="follow-ip">中国香港</div>
+        <button class="view-profile-btn">查看主页</button>
+      </div>
+
+      <!-- 时间标签 -->
+      <div class="time-tag">刚刚</div>
+
+      <!-- 对方消息 -->
+      <div class="msg-row left">
+        <div class="msg-avatar"></div>
+        <div class="msg-bubble left-bubble">bb，同我返香港，冇得商量。</div>
+      </div>
+
+      <!-- 系统提示1 -->
+      <div class="system-hint">对方当前处于境外，请注意核实身份。</div>
+      <!-- 系统提示2 -->
+      <div class="system-hint">确认聊天或关注对方前，对方只能发送一条消息</div>
+
+      <!-- 后续消息会动态插入到这里 -->
+    </div>
+
+    <!-- 输入栏 -->
+    <div class="input-bar">
+      <button class="emoji-btn" aria-label="表情">😊</button>
+      <input type="text" class="input-field" id="messageInput" placeholder="发送消息..." autocomplete="off">
+      <button class="plus-btn" aria-label="添加">＋</button>
+      <button class="send-btn" id="sendBtn">发送</button>
+    </div>
+
+    <!-- Home指示条 -->
+    <div class="home-indicator">
+      <div class="home-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const chatArea = document.getElementById('chatArea');
+      const messageInput = document.getElementById('messageInput');
+      const sendBtn = document.getElementById('sendBtn');
+
+      // 裴郅野人设数据
+      const PERSONA = {
+        name: '裴郅野',
+        age: 25,
+        height: 189,
+        identity: '港市裴家大少爷',
+        background: '裴家产业众多，黑白通吃。除了正常的商业科技航运等，还包含众多赌场、会所、酒吧、夜总会等等。',
+        family: '父亲商业头脑强悍，做事手段狠厉，在外有很多情人。从小没有对于感情应该“忠贞”的觉悟。',
+        personality: '风流不羁的潇洒浪荡贵公子，实则在此之前没碰过别的女人。倨傲、腹黑、没心没肺，不相信爱情。占有欲控制欲掌控欲保护欲很强，有些许s属性，偏dom，懂得玩法。',
+        appearance: '桃花眼，高挺鼻梁，寡情的薄唇，薄肌身材，人群中一眼就是中心。',
+        hobbies: '赛车、棋牌麻将、纨绔子弟那一套都会，很会哄人，善于挑逗，情话张嘴就来。',
+        speech: '粤语、港普、情话、轻佻但不惹人生厌。'
+      };
+
+      // 已使用的回复记录（避免完全重复同一句话）
+      let usedReplies = [];
+
+      // 回复池
+      const REPLY_POOL = {
+        // 当用户发送“不要”、“不”、“我不跟你走”时
+        refusal: [
+          '？',
+          'bb，你冇得揀。'
+        ],
+        // 其他情况
+        general: [
+          '乖呀，我嚟接你',
+          '我可以畀你最好嘅一切',
+          '我淨係要你留喺我身邊'
+        ]
+      };
+
+      // 判断是否触发拒绝类回复
+      function isRefusalMessage(text) {
+        const trimmed = text.trim();
+        const refusalKeywords = ['不要', '不', '我不跟你走'];
+        // 精确匹配或包含
+        for (let keyword of refusalKeywords) {
+          if (trimmed === keyword || trimmed.includes(keyword)) {
+            // 但如果是“我不跟你走”这种长句，也符合
+            return true;
+          }
+        }
+        return false;
+      }
+
+      // 从数组中获取一个未使用过的回复（尽量不重复）
+      function getUniqueReply(pool) {
+        // 过滤掉已经用过的
+        let available = pool.filter(r => !usedReplies.includes(r));
+        // 如果全都用过了，重置已使用记录（但保留最近使用的，避免连续重复）
+        if (available.length === 0) {
+          // 保留最近一条已使用记录，避免连续重复同一句
+          const lastUsed = usedReplies[usedReplies.length - 1];
+          usedReplies = lastUsed ? [lastUsed] : [];
+          available = pool.filter(r => !usedReplies.includes(r));
+          if (available.length === 0) {
+            available = pool;
+          }
+        }
+        // 随机选一个
+        const reply = available[Math.floor(Math.random() * available.length)];
+        usedReplies.push(reply);
+        // 限制记录长度，避免无限增长
+        if (usedReplies.length > 20) {
+          usedReplies = usedReplies.slice(-10);
+        }
+        return reply;
+      }
+
+      // 添加消息到界面
+      function addMessage(text, isUser) {
+        const row = document.createElement('div');
+        row.className = `msg-row ${isUser ? 'right' : 'left'}`;
+
+        // 头像
+        const avatar = document.createElement('div');
+        avatar.className = 'msg-avatar';
+        // 对方头像纯黑，用户头像也纯黑（但可以稍作区分？这里保持纯黑圆）
+        // 用户头像也是黑色圆，但为了区分，右侧头像可略微调整（还是纯黑）
+        // 保持统一黑色圆
+
+        // 气泡
+        const bubble = document.createElement('div');
+        bubble.className = `msg-bubble ${isUser ? 'right-bubble' : 'left-bubble'}`;
+        bubble.textContent = text;
+
+        if (isUser) {
+          row.appendChild(bubble);
+          row.appendChild(avatar);
+        } else {
+          row.appendChild(avatar);
+          row.appendChild(bubble);
+        }
+
+        chatArea.appendChild(row);
+        // 滚动到底部
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
+
+      // 添加时间标签（刚刚）
+      function addTimeTag() {
+        const tag = document.createElement('div');
+        tag.className = 'time-tag';
+        tag.textContent = '刚刚';
+        chatArea.appendChild(tag);
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
+
+      // 发送用户消息
+      function sendUserMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        // 添加用户消息
+        addMessage(text, true);
+        messageInput.value = '';
+        messageInput.focus();
+
+        // 判断类型
+        const isRefusal = isRefusalMessage(text);
+
+        // 依次回复
+        if (isRefusal) {
+          // 回复两条：？、bb，你冇得揀。
+          const replies = ['？', 'bb，你冇得揀。'];
+          replies.forEach((replyText, index) => {
+            setTimeout(() => {
+              addTimeTag();
+              addMessage(replyText, false);
+            }, 300 + index * 500);
+          });
+        } else {
+          // 回复三条
+          const replies = [
+            '乖呀，我嚟接你',
+            '我可以畀你最好嘅一切',
+            '我淨係要你留喺我身邊'
+          ];
+          // 但根据人设，需要随机1～3句？题目要求：当用户发送除此之外任何其余的话，依次分开回复三条：“乖呀，我嚟接你”、“我可以畀你最好嘅一切”、“我淨係要你留喺我身邊”
+          // 这里严格按题目，依次回复三条。但为了“智能回复，每次回复1～3句，随机，禁止重复以同一句话回复”，
+          // 我们可以在三条中随机选1～3句？题目又说“依次分开回复三条”，有矛盾。
+          // 为兼顾“智能回复，每次回复1～3句，随机”，我们改为从三条中随机选1～3句，且不重复同一句（但一次回复内可以选不同句子）
+          // 但题目明确写了“依次分开回复三条”，这里我们按题目要求：依次分开回复三条。
+          // 同时为了满足“智能回复”的随机性，我们在三条的先后顺序上随机打乱？但题目说“依次分开回复三条：……”，按顺序。
+          // 我们按照题目要求依次回复三条，但每条之间加时间标签，并且每条都是独立的。
+          // 另外为了“禁止重复以同一句话回复”，由于池子只有三句，我们通过洗牌或随机顺序来避免每次都一样？
+          // 题目要求依次是：乖呀，我嚟接你 / 我可以畀你最好嘅一切 / 我淨係要你留喺我身邊
+          // 我们严格按顺序，但为了不重复，可以加上“智能”地偶尔省略某句？不，还是按题目。
+          // 但题目第9条要求“每次回复1～3句，随机”，所以我们在这里做随机1～3句，从三条里随机选。
+          // 但第7条又要求“依次分开回复三条”，有点冲突。我们取一个折中：用户发其他消息时，从三条中随机选1~3句（不重复），
+          // 并且间隔发送。这样既满足随机1~3句，也满足回复池三条。同时“依次分开”可以理解为一条一条发送。
+          // 好，我们就实现为：从三条中随机选1~3句（不重复），逐条发送。
+          // 但因为题目第7条明确写了“依次分开回复三条：...”，也可能用户期望就是三条都发。
+          // 为了更符合“智能回复，每次回复1～3句，随机”，我决定随机选1~3句。如果选3句，那就是三条。
+          // 同时从池中随机取，不重复，保证不同次回复有变化。
+          // 这样也满足了“禁止重复以同一句话回复”的要求（因为是随机选的）。
+          // 但如果用户一直发，三条可能重复出现，但通过随机选择，短期内不会完全一样。
+
+          // 从三条中随机选1~3条（不重复）
+          const generalPool = [
+            '乖呀，我嚟接你',
+            '我可以畀你最好嘅一切',
+            '我淨係要你留喺我身邊'
+          ];
+          // 打乱顺序
+          const shuffled = [...generalPool].sort(() => Math.random() - 0.5);
+          // 随机决定选几条 (1~3)
+          const count = Math.floor(Math.random() * 3) + 1; // 1,2,3
+          const selected = shuffled.slice(0, count);
+
+          // 逐条发送
+          selected.forEach((replyText, index) => {
+            setTimeout(() => {
+              addTimeTag();
+              addMessage(replyText, false);
+            }, 300 + index * 500);
+          });
+        }
+      }
+
+      // 绑定发送事件
+      sendBtn.addEventListener('click', sendUserMessage);
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendUserMessage();
+        }
+      });
+
+      // 初始化聚焦
+      messageInput.focus();
+
+      // 滚动到底部（初始化）
+      chatArea.scrollTop = chatArea.scrollHeight;
+
+      // 可选：点击表情、加号无功能，但保留按钮
+    })();
+  </script>
+</body>
+</html>
